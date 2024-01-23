@@ -1,0 +1,6 @@
+{
+    "port": 8080,
+    "max_connections": 128,
+    "timeout": 300,
+    "max_clients": 10
+}
