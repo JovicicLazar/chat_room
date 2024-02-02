@@ -31,6 +31,8 @@ Client::Client() {
 
 void Client::recieve_message() {
 	try {
+		std::thread inputThread(&Interface::handle_input_mwin, &client_interface); // Create a new thread
+        inputThread.detach(); 
 		while( true ) {
 			uint32_t message_bytes_size;
 			recv(client_fd, &message_bytes_size, sizeof(uint32_t), 0);
@@ -41,7 +43,7 @@ void Client::recieve_message() {
 			memset(message, 0, sizeof(message));
 			//message[message_length] = '\0';
 			uint64_t bytes_received = recv(client_fd, message, message_length, 0);
-
+			
 			if (bytes_received == 0) {
 				delete[] message;
 				throw std::runtime_error("disconnected from the server: "  + std::string(strerror(errno)));
@@ -50,10 +52,7 @@ void Client::recieve_message() {
 				delete[] message;
 				throw std::runtime_error("recieve message error: "  + std::string(strerror(errno)));
 			}
-
-			//cout << "Received message: " << message << endl;
-			wprintw(msg_window, "%s\n", message);
-    		wrefresh(msg_window);
+			client_interface.print_to_window(std::string(message));
 			delete[] message;
 		}
 	} catch(const exception& e) {

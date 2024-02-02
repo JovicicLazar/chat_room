@@ -12,15 +12,13 @@
 #include <stdio.h>
 #include <ncurses.h>
 
-#include "../../headers/room/client.hpp"
+#include "../interface/interface.hpp"
 
 using namespace std;
 
 class Client {
     public:
         Client();
-
-        WINDOW *msg_window;
 
         void send_message();
         void recieve_message();
@@ -29,6 +27,7 @@ class Client {
         string get_username();
 
     private:
+        Interface client_interface;
         int client_fd;
         int opt = 1;
         int port;
